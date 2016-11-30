@@ -8,7 +8,6 @@ import (
 	"io"
 	"log"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -36,10 +35,6 @@ Usage:
 
 Options:
     -f --file <path>  Specify file location to read. [default: /dev/stdin]
-    -s --sort <path>  Specify sort rules.
-                       You can specify two or more rules as comma-separated
-                       list, like as following: rows_read:desc,rows_sent:asc
-                       [default: time_start:asc]
     -h --help         Show this screen.
     --version         Show version.
 `
@@ -166,28 +161,6 @@ func main() {
 
 	for index, record := range records {
 		records[index] = prepare(record)
-	}
-
-	sorts := strings.Split(args["--sort"].(string), ",")
-
-	for _, sorting := range sorts {
-		parts := strings.Split(sorting, ":")
-		if len(parts) != 2 {
-			hierr.Fatalf(
-				err, "--sort flag has invalid syntax, "+
-					"should be key:value,key2:value2",
-			)
-		}
-
-		key, value := parts[0], parts[1]
-
-		sorter := &sorter{
-			records: records,
-			key:     key,
-			desc:    strings.ToLower(value) == "desc",
-		}
-
-		sort.Sort(sorter)
 	}
 
 	data, err := json.MarshalIndent(records, "", "    ")
