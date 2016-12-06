@@ -184,6 +184,8 @@ func process(record Record) (Record, bool) {
 
 	if query, ok := record["query"].(string); ok {
 		record["query_length"] = len(query)
+
+		record["query_type"] = getQueryType(query)
 	}
 
 	return record, true
@@ -265,4 +267,30 @@ func parse(raw, key, rule string) (interface{}, error) {
 	}
 
 	return nil, nil
+}
+
+func getQueryType(query string) string {
+	operations := []string{
+		"SELECT",
+		"INSERT",
+		"UPDATE",
+		"DELETE",
+		"DROP",
+	}
+
+	min := -1
+	queryType := ""
+	for _, operation := range operations {
+		index := strings.Index(query, operation)
+		if index >= 0 && (index <= min || min == -1) {
+			queryType = operation
+			min = index
+		}
+	}
+
+	if min >= 0 {
+		return queryType
+	}
+
+	return ""
 }
