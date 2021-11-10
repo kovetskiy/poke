@@ -15,8 +15,8 @@ import (
 	"os"
 
 	"github.com/kovetskiy/godocs"
+	"github.com/reconquest/hierr-go"
 	"github.com/reconquest/ser-go"
-	"github.com/seletskiy/hierr"
 )
 
 var (
