@@ -248,7 +248,7 @@ func match(data, key string) (string, bool) {
 func parse(raw, key, rule string) (interface{}, error) {
 	switch rule {
 	case "datetime":
-		return time.Parse("060102 15:04:05.0000000000", raw)
+		return time.Parse("060102 15:04:05", raw)
 	case "time":
 		return time.ParseDuration(raw + "s")
 	case "string":
